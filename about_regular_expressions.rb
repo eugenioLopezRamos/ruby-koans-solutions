@@ -3,36 +3,38 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 class AboutRegularExpressions < Neo::Koan
   def test_a_pattern_is_a_regular_expression
-    assert_equal __, /pattern/.class
+    assert_equal Regexp, /pattern/.class
   end
 
   def test_a_regexp_can_search_a_string_for_matching_content
-    assert_equal __, "some matching content"[/match/]
+    assert_equal "match", "some matching content"[/match/]
   end
 
   def test_a_failed_match_returns_nil
-    assert_equal __, "some matching content"[/missing/]
+    assert_equal nil, "some matching content"[/missing/]
   end
 
   # ------------------------------------------------------------------
 
   def test_question_mark_means_optional
-    assert_equal __, "abbcccddddeeeee"[/ab?/]
-    assert_equal __, "abbcccddddeeeee"[/az?/]
+    assert_equal "ab", "abbcccddddeeeee"[/ab?/]
+    assert_equal "a", "abbcccddddeeeee"[/az?/]
   end
 
   def test_plus_means_one_or_more
-    assert_equal __, "abbcccddddeeeee"[/bc+/]
+    assert_equal "bccc", "abbcccddddeeeee"[/bc+/]
   end
 
   def test_asterisk_means_zero_or_more
-    assert_equal __, "abbcccddddeeeee"[/ab*/]
-    assert_equal __, "abbcccddddeeeee"[/az*/]
-    assert_equal __, "abbcccddddeeeee"[/z*/]
+    assert_equal "abb", "abbcccddddeeeee"[/ab*/]
+    assert_equal "a", "abbcccddddeeeee"[/az*/]
+    assert_equal "", "abbcccddddeeeee"[/z*/]
 
     # THINK ABOUT IT:
     #
     # When would * fail to match?
+      # http://stackoverflow.com/questions/5084141/getting-the-star-regex-operator-to-fail
+      #patterns matching more than one char eg: ab*c will fail to match azc, since b* will not match z and c will not match zc.
   end
 
   # THINK ABOUT IT:
@@ -41,17 +43,17 @@ class AboutRegularExpressions < Neo::Koan
   #
   # Why?
 
-  # ------------------------------------------------------------------
+  # Because they try to match indeterminate amounts of characters, and so will be more taxing performance wise.
 
   def test_the_left_most_match_wins
-    assert_equal __, "abbccc az"[/az*/]
+    assert_equal "a", "abbccc az"[/az*/]
   end
 
   # ------------------------------------------------------------------
 
   def test_character_classes_give_options_for_a_character
     animals = ["cat", "bat", "rat", "zat"]
-    assert_equal __, animals.select { |a| a[/[cbr]at/] }
+    assert_equal ["cat", "bat", "rat"], animals.select { |a| a[/[cbr]at/] }
   end
 
   def test_slash_d_is_a_shortcut_for_a_digit_character_class
